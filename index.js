@@ -13,7 +13,8 @@ var defaults = {
         '.scss': '.css',
         '.less': '.css',
         '.jsx': '.js'
-    }
+    },
+	excludedKeys: []
 };
 
 function _getManifestData(file, opts) {
@@ -112,6 +113,10 @@ function revCollector(opts) {
         }
 
         for (var key in manifest) {
+			//exclude some key
+			if(opts.excludedKeys.indexOf(key) != -1){
+				continue;
+			}
             var patterns = [ escPathPattern(key) ];
             if (opts.replaceReved) {
                 var patternExt = path.extname(key);
@@ -175,6 +180,7 @@ function revCollector(opts) {
                 return b.patternLength - a.patternLength;
             }
         );
+
         mutables.forEach(function (file){
             if (!file.isNull()) {
                 var src = file.contents.toString('utf8');
